@@ -1,3 +1,10 @@
-body {
-  background-color: aqua;
+.hidden {
+  display: none;
+}
+
+.show {
+  display: content;
+}
+li {
+  list-style: none;
 }

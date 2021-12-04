@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css">
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
   <link rel="stylesheet" href="./assets/css/style.css"/>
   <title>Weather</title>
 <head>
@@ -9,8 +12,92 @@
   <title>Document</title>
 </head>
 <body>
-  <input class="city-input" id="city">
-  <button class="search-btn">search</button> 
+
+  <hero class="row no-gutters flex-d justify-content-center">
+    <h1 class="app-title">Weather Dashboard</h1>
+  </hero>
+
+  <div class="row min-vh-100 no-gutters">
+    <header id="search-by-city" class="col-12 col-lg-3 bg-dark text-light d-flex flex-column p-4 p-lg-3">
+      <h1 class="text-center">
+        Search by City</h1>
+        <input id="city">
+      <button id="remove-tasks" class="search-btn btn btn-primary my-3">
+        Search
+      </button>
+        <h2 class="text-center">
+          Recent Search
+        </h2>
+        <ul id="city-list">
+          <li>
+            <button class="btn btn-secondary m-2"> slc </button>
+          </li>
+          <li>
+            <button class="btn btn-secondary m-2"> Pittsburgh </button>
+          </li>
+        </ul>
+    </header>
+    <main class="col-12 col-lg-9 d-flex flex-column">
+      <div class=" m-1 row justify-content-center">
+        <!-- current weather start -->
+        <div class="current-forecast col-12 mb-2">
+          <div class="card">
+              <h4 class ="card-header bg-dark text-light">
+                Current Weather
+              </h4>
+              <div id="hide" class="hidden">
+                <div class="p-2">
+                  <div id="today-date"></div>
+                  <img class="" id="wicon" src="" alt="Weather icon">
+                </div>
+                
+                  <ul>   
+                    <li id="today-humidity">humidity</li>
+                    <li id="today-uvi">uvi</li>
+                    <li id="today-windspeed">windspeed</li>
+                    <li id="today-temp">temp</li>  
+                  </ul>    
+              </div>
+          </div>
+        </div>
+        <!-- current weather end -->
+        <!-- 5 day forecast -->
+        
+        <div  class="forecast col-12 bg-dark no-gutter container">
+          <!-- card for container -->
+          <div  class="mt-3">
+              <h4 class="text-light">
+                5 Day Forecast
+              </h4>
+              <div class="row">
+              <!--card 5 day forecast  -->
+              <div id="forecast" class="col-3 d-felx flex-column m-2">
+                <div class="card">
+                  <h4 class="card-header bg-dark">
+                    date
+                  </h4>
+                    <li class="text-dark">
+                      <i class="fas fa-cloud-showers-heavy fa-3x"></i> 
+                      <!-- fa-3x makes icon bigger and smaller-->
+                      <span class="oi oi-rain"></span>
+                      <ul>date</ul>
+                      <ul>temp</ul>
+                      <ul>uvi</ul>
+                      <ul>humidity</ul>
+                      <ul>temp</ul>
+                    </li>
+                </div>
+              </div>  
+              <!-- end of 5 day card -->
+          </div>
+        </div>
+        <!-- end 5 day container card -->
+      </div>
+    </main>
+  </div>
+
+   <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
   <script src="./assets/js/script.js"></script>
 </body>
 </html>
