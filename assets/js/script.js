@@ -11,11 +11,11 @@ var getWeather = function(lat, lon, city) {
       if (response.ok) {
         response.json().then(function(data) {
           currentWeather(city, data.current.temp, data.current.humidity, data.current.wind_speed, data.current.uvi, data.daily);
-          console.log('data', data.daily);
+          console.log('data current', data.current);
           console.log("city", city);
         })
       } else {
-        // if not successful, redirect to homepage
+        // if not successful alert not found please try again
         console.log('location not found');
       }
     });
@@ -100,7 +100,6 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     // console logging data to check if correct
     console.log('dailyI',daily[i]);
     console.log(`humidity: ${daily[i].humidity}%`);
-    console.log(`uv index: ${daily[i].uvi}`);
     console.log(`wind: ${daily[i].wind_speed} mph`);
     console.log(`temp: ${daily[i].temp.day}° F`);
     console.log(`weekday date: ${moment.unix(daily[i].dt).format("DD,MM")}`);
@@ -117,7 +116,6 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     var dailyTemp= document.createElement("li");
     var dailyWind= document.createElement("li");
     var dailyHum= document.createElement("li");
-    var dailyUvi = document.createElement("li");
     var dailyIcon = document.createElement('img');
 
     // icon display
@@ -130,7 +128,6 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     dailyTemp.textContent = `temp: ${daily[i].temp.day}° F`;
     dailyWind.textContent = `wind: ${daily[i].wind_speed} mph`;
     dailyHum.textContent = `humidity: ${daily[i].humidity}%`;
-    dailyUvi.textContent = `uv index: ${daily[i].uvi}`;
     // create card in forecast
     forecastEl.appendChild(fiveDayCard);
     fiveDayCard.appendChild(cardHeader);
@@ -140,7 +137,6 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     listGroup.appendChild(dailyTemp);
     listGroup.appendChild(dailyWind);
     listGroup.appendChild(dailyHum);
-    listGroup.appendChild(dailyUvi);
     
 
   };
@@ -148,29 +144,35 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
 
 var saveCity = function(cityName) {
   localStorage.setItem('city',cityName);
-  alert(localStorage.getItem('city'));
-  var cityListGroupEl = document.getElementById("city-list");
-
-  // create childern elements
-  var cityButton = document.createElement('button');
-  var cityListItem = document.createElement('li');
-  // put data into button child
-  cityButton.textContent =localStorage.getItem('city');
-
-  cityListItem.appendChild(cityButton);
-  cityListGroupEl.appendChild(cityListItem);
+  alert(localStorage.getItem('city'),'is set in local storage');
   
-  // need to style more later with classes?
-  cityButton.classList.add('btn');
-  cityButton.classList.add('btn-secondary');
-  cityButton.classList.add('m-2');
-  
-  console.log(cityButton.classList);
+  // console.log(cityButton.classList);
+  // console.log(cityButton.innerHTML);
 
-  // if(cityName = past city name){
-  //    do not append child.
+  // if(localStorage.getItem('city') != cityButton.innerHTML){
+
+    var cityListGroupEl = document.getElementById("city-list");
+    // create childern elements
+    var cityButton = document.createElement('button');
+    var cityListItem = document.createElement('li');
+    // put data into button child
+    cityButton.textContent =localStorage.getItem('city');
+    
+    // append to html
+    cityListItem.appendChild(cityButton);
+    cityListGroupEl.appendChild(cityListItem);
+
+    // bootstrap styling buttons
+    cityButton.classList.add('btn');
+    cityButton.classList.add('btn-secondary');
+    cityButton.classList.add('m-2');
   // }
+  // else nothing
 
   //   var buttonListGroup ;  
-
 }
+
+
+// cityButton.addEventListener('click',function(){
+//   console.log('click');
+// });
