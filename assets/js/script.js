@@ -13,6 +13,7 @@ var getWeather = function(lat, lon, city) {
           currentWeather(city, data.current.temp, data.current.humidity, data.current.wind_speed, data.current.uvi, data.daily);
           console.log('data current', data.current);
           console.log("city", city);
+          buttonCreate(city);
         })
       } else {
         // if not successful alert not found please try again
@@ -57,6 +58,9 @@ citySearchBtn.addEventListener('click',function(event){
 
   getLatLon(cityName.value.trim());
   saveCity(cityName.value.trim());
+
+  // clear 5 day forecaset div
+  fiveDayEl = ""; 
   
 }) 
 
@@ -92,11 +96,12 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
   var todayIcon= daily[0].weather[0].icon;
   var iconUrl = `http://openweathermap.org/img/w/${todayIcon}.png`;
   $('#wicon').attr('src', iconUrl);
+  forecastEl.innerHTML= "";
 
   daily.splice(6);
   // check that it cut off what you wanted
   for(var i=1;i<daily.length;i++) {
-
+    
     // console logging data to check if correct
     console.log('dailyI',daily[i]);
     console.log(`humidity: ${daily[i].humidity}%`);
@@ -112,6 +117,7 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     cardHeader.textContent = forecastDate;
     cardHeader.classList.add('card-header');
     // create list elements var for each card
+    var divIntoForecast = document.createElement('div');
     var listGroup = document.createElement("ul");
     var dailyTemp= document.createElement("li");
     var dailyWind= document.createElement("li");
@@ -128,8 +134,16 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     dailyTemp.textContent = `temp: ${daily[i].temp.day}° F`;
     dailyWind.textContent = `wind: ${daily[i].wind_speed} mph`;
     dailyHum.textContent = `humidity: ${daily[i].humidity}%`;
-    // create card in forecast
-    forecastEl.appendChild(fiveDayCard);
+
+    // add classes to div parent
+    divIntoForecast.classList.add("col");
+    divIntoForecast.classList.add("d-flex");
+    divIntoForecast.classList.add("flex-column");
+    divIntoForecast.classList.add("p-1");
+    
+    // create card into forecast row
+    forecastEl.appendChild(divIntoForecast);
+    divIntoForecast.appendChild(fiveDayCard);
     fiveDayCard.appendChild(cardHeader);
     fiveDayCard.appendChild(listGroup);
     // append list el to above cards
@@ -137,42 +151,52 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     listGroup.appendChild(dailyTemp);
     listGroup.appendChild(dailyWind);
     listGroup.appendChild(dailyHum);
-    
-
   };
 }
 
+var saveArray = [];
+// 
 var saveCity = function(cityName) {
-  localStorage.setItem('city',cityName);
-  alert(localStorage.getItem('city'),'is set in local storage');
-  
-  // console.log(cityButton.classList);
-  // console.log(cityButton.innerHTML);
+  saveArray.push(cityName);
+  localStorage.setItem('city',JSON.stringify(saveArray));
 
-  // if(localStorage.getItem('city') != cityButton.innerHTML){
-
-    var cityListGroupEl = document.getElementById("city-list");
-    // create childern elements
-    var cityButton = document.createElement('button');
-    var cityListItem = document.createElement('li');
-    // put data into button child
-    cityButton.textContent =localStorage.getItem('city');
-    
-    // append to html
-    cityListItem.appendChild(cityButton);
-    cityListGroupEl.appendChild(cityListItem);
-
-    // bootstrap styling buttons
-    cityButton.classList.add('btn');
-    cityButton.classList.add('btn-secondary');
-    cityButton.classList.add('m-2');
-  // }
-  // else nothing
-
-  //   var buttonListGroup ;  
+ 
 }
 
+var load = function () {
+  if(!saveArray) {
+    return false;
+  }
+  var loadCity = localStorage.getItem('city');
+  saveArray = json.parse(loadCity);
+  console.log(loadCity);
+  buttonCreate(city);
+}
 
-// cityButton.addEventListener('click',function(){
-//   console.log('click');
-// });
+var buttonCreate =function (city){
+
+  var cityListGroupEl = document.getElementById("city-list");
+  // create childern elements
+  var cityButton = document.createElement('button');
+  var cityListItem = document.createElement('li');
+  // put data into button child
+  cityButton.textContent =city;
+  
+  // append to html
+  cityListItem.appendChild(cityButton);
+  cityListGroupEl.appendChild(cityListItem);
+
+  // bootstrap styling buttons
+  cityButton.classList.add('btn');
+  cityButton.classList.add('btn-secondary');
+  cityButton.classList.add('m-2');
+
+  cityButton.addEventListener('click',historySearch);
+};
+
+var historySearch = function(event){
+  event.trigger;
+  getLatLon(event.target.textContent);
+};
+
+load();
