@@ -81,16 +81,23 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
   var todayHumidity = document.getElementById('today-humidity');
   todayHumidity.textContent = `humidity ${humidity}%`;
   // today uvi
-  var todayHumidity = document.getElementById('today-uvi');
-  todayHumidity.textContent = `uv index ${uvindex}`;
+  var todayUvi = document.getElementById('today-uvi');
+  todayUvi.textContent = `uv index ${uvindex}`;
+  // Color code UV index depending on serverity
+
+  if (uvindex < 3){todayUvi.classList.add("bg-success");}
+  else if (3 < uvindex < 6){todayUvi.classList.add("bg-warning");}
+  else if (7 < uvindex < 8){todayUvi.classList.add("bg-secondary");}
+  else if (9 < uvindex < 10){todayUvi.classList.add("bg-danger");}
+  else {todayUvi.classList.add("bg-info");}
 
   // today windspeed
-  var todayHumidity = document.getElementById('today-windspeed');
-  todayHumidity.textContent = `wind: ${windspeed} mph`;
+  var todayWind = document.getElementById('today-windspeed');
+  todayWind.textContent = `wind: ${windspeed} mph`;
 
   // today-temp
-  var todayHumidity = document.getElementById('today-temp');
-  todayHumidity.textContent = `temp: ${temp}° F`;
+  var todayTemp = document.getElementById('today-temp');
+  todayTemp.textContent = `temp: ${temp}° F`;
 
   // display icon
   var todayIcon= daily[0].weather[0].icon;
@@ -158,9 +165,8 @@ var saveArray = [];
 // 
 var saveCity = function(cityName) {
   saveArray.push(cityName);
-  localStorage.setItem('city',JSON.stringify(saveArray));
-
- 
+  localStorage.setItem('city',JSON.stringify(saveArray)); 
+  saveArray.splice(10);
 }
 
 var load = function () {
@@ -168,9 +174,12 @@ var load = function () {
     return false;
   }
   var loadCity = localStorage.getItem('city');
-  saveArray = json.parse(loadCity);
-  console.log(loadCity);
-  buttonCreate(city);
+  saveArray = JSON.parse(loadCity);
+  
+  for (i=0;i<saveArray.length; i++){
+    buttonCreate(saveArray[i]);
+  }
+  
 }
 
 var buttonCreate =function (city){
@@ -192,6 +201,7 @@ var buttonCreate =function (city){
   cityButton.classList.add('m-2');
 
   cityButton.addEventListener('click',historySearch);
+  
 };
 
 var historySearch = function(event){
