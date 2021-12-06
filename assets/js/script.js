@@ -1,7 +1,7 @@
 var citySearchBtn = document.querySelector(".search-btn");
 var forecastEl= document.getElementById("forecast");
 var currentWeatherContainer = document.querySelector("#hide");
-
+var saveArray = [];
 
 // get weather API
 var getWeather = function(lat, lon, city) {
@@ -67,9 +67,9 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     uvindex,'daily', daily );
 
   currentWeatherContainer.classList.remove('hidden');
-  var date = moment().format("ddd, MMM, Do");
+  var date = moment().format("ddd MMM Do");
   console.log(date);
-  currentCityDate= `${city} ${date}`;
+  currentCityDate= `${city} - ${date}`;
   console.log('current city var', currentCityDate)
   // display current city on current weather
   var cityDate = document.getElementById("today-date")
@@ -77,18 +77,22 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
 
   // today humidity
   var todayHumidity = document.getElementById('today-humidity');
-  todayHumidity.textContent = `humidity ${humidity}%`;
+  todayHumidity.textContent = `humidity: ${humidity}%`;
   // today uvi
   var todayUvi = document.getElementById('today-uvi');
-  todayUvi.textContent = `uv index ${uvindex}`;
+  todayUvi.textContent = `uv index: ${uvindex}`;
   // clear previous searches class
   $(todayUvi).removeClass();
   // Color code UV index depending on serverity
-  if (uvindex < 3){todayUvi.classList.add("bg-success");}
-  else if (3 < uvindex && uvindex < 6){todayUvi.classList.add("bg-warning");}
-  else if (6 < uvindex && uvindex < 8){todayUvi.classList.add("bg-secondary");}
-  else if (uvindex > 9){todayUvi.classList.add("bg-danger");}
-  // else {todayUvi.classList.add("bg-info");}
+  if (uvindex < 3){
+    todayUvi.classList.add("btn")
+    todayUvi.classList.add("btn-success");}
+  else if (3 < uvindex && uvindex < 8){
+    todayUvi.classList.add("btn");
+    todayUvi.classList.add("btn-warning");}
+  else if (uvindex > 8){
+    todayUvi.classList.add("btn");
+    todayUvi.classList.add("btn-danger");}
 
   // today windspeed
   var todayWind = document.getElementById('today-windspeed');
@@ -101,7 +105,7 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
   // display icon
   var todayIcon= daily[0].weather[0].icon;
   console.log(todayIcon);
-  var iconUrl = `http://openweathermap.org/img/w/${todayIcon}.png`;
+  var iconUrl = `http://openweathermap.org/img/wn/${todayIcon}@2x.png`;
   $('#wicon').attr('src', iconUrl);
   forecastEl.innerHTML= "";
 
@@ -116,11 +120,11 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     console.log(`temp: ${daily[i].temp.day}° F`);
     console.log(`weekday date: ${moment.unix(daily[i].dt).format("DD,MM")}`);
     console.log(`icon: ${daily[i].weather[0].icon}`);
-    var forecastDate = moment.unix(daily[i].dt).format("ddd, MMM, Do");
+    var forecastDate = moment.unix(daily[i].dt).format("ddd DD/MM");
     // create elements for card
     var fiveDayCard = document.createElement('card');
     fiveDayCard.classList.add('card');
-    var cardHeader = document.createElement('h3');
+    var cardHeader = document.createElement('h5');
     cardHeader.textContent = forecastDate;
     cardHeader.classList.add('card-header');
     // create list elements var for each card
@@ -133,12 +137,12 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
 
     // icon display
     var Icon= daily[i].weather[0].icon;
-    var iconUrl = `http://openweathermap.org/img/w/${Icon}.png`;
+    var iconUrl = `http://openweathermap.org/img/wn/${Icon}@2x.png`;
     dailyIcon.src= iconUrl;
     console.log('daily icon src', dailyIcon.src);
     
     // add that days text content
-    dailyTemp.textContent = `temp: ${daily[i].temp.day}° F`;
+    dailyTemp.textContent = `${daily[i].temp.day}° F`;
     dailyWind.textContent = `wind: ${daily[i].wind_speed} mph`;
     dailyHum.textContent = `humidity: ${daily[i].humidity}%`;
 
@@ -160,7 +164,7 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     listGroup.appendChild(dailyHum);
   };
 }
-var saveArray = [];
+
 var saveCity = function(cityName) {
   saveArray.push(cityName);
   localStorage.setItem('city',JSON.stringify(saveArray)); 
@@ -168,13 +172,14 @@ var saveCity = function(cityName) {
 
 var load = function () {
   if(!saveArray) {
+    console.log('hit first if statment');
     return false;
   }
   else {}
   var loadCity = localStorage.getItem('city')
-  saveArray = JSON.parse(loadCity);
+  saveArray = JSON.parse(loadCity) || [];
   console.log(saveArray);
-  for (i=0;i< saveArray.length; i++){
+  for (i=0; i < saveArray.length; i++){
     buttonCreate(saveArray[i]);
   }
 }
