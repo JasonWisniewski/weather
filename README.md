@@ -1,6 +1,5 @@
-# Weather-dashboard
+# Weather-Dashboard
 
-# work-day-scheduler
 ## Description
 This projects purpose is to make a weather dashboard that shows the current weather and 5 day forecast of the user defined city.  It also saves the user searches in local stoarge and disaplys search history as buttons on side of dashboard.  This project taught me about access data from a 3rd part API and solidifed creating DOM elements in JavaScript.
 
