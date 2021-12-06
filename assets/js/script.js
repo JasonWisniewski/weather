@@ -13,7 +13,6 @@ var getWeather = function(lat, lon, city) {
         response.json().then(function(data) {
           currentWeather(city, data.current.temp, data.current.humidity, data.current.wind_speed, data.current.uvi, data.daily);
           console.log('data current', data.current);
-          console.log("city", city);
           buttonCreate(city);
         })
       } else {
@@ -38,11 +37,11 @@ var getLatLon = function(city) {
         })
       } else {
         // if not successful, redirect to homepage
-        console.log('error location not found');
+        alert('error location not found');
       }
     })
     .catch(function(error){
-      console.log("network error");
+      alert("network error");
   });
 }
 
@@ -50,8 +49,7 @@ citySearchBtn.addEventListener('click',function(event){
   event.preventDefault();
   // grabbing user defined city name
   var cityName = document.getElementById('city');
-  console.log('bntn click');
-  console.log('city', cityName.value.trim());
+  console.log('btn click');
 
   getLatLon(cityName.value.trim());
   saveCity(cityName.value.trim());
@@ -68,9 +66,7 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
 
   currentWeatherContainer.classList.remove('hidden');
   var date = moment().format("ddd MMM Do");
-  console.log(date);
   currentCityDate= `${city} - ${date}`;
-  console.log('current city var', currentCityDate)
   // display current city on current weather
   var cityDate = document.getElementById("today-date")
   cityDate.textContent = currentCityDate
@@ -113,13 +109,6 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
   // check that it cut off what you wanted
   for(var i=1;i<daily.length;i++) {
     
-    // console logging data to check if correct
-    console.log('dailyI',daily[i]);
-    console.log(`humidity: ${daily[i].humidity}%`);
-    console.log(`wind: ${daily[i].wind_speed} mph`);
-    console.log(`temp: ${daily[i].temp.day}° F`);
-    console.log(`weekday date: ${moment.unix(daily[i].dt).format("DD,MM")}`);
-    console.log(`icon: ${daily[i].weather[0].icon}`);
     var forecastDate = moment.unix(daily[i].dt).format("ddd DD/MM");
     // create elements for card
     var fiveDayCard = document.createElement('card');
@@ -139,7 +128,6 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     var Icon= daily[i].weather[0].icon;
     var iconUrl = `http://openweathermap.org/img/wn/${Icon}@2x.png`;
     dailyIcon.src= iconUrl;
-    console.log('daily icon src', dailyIcon.src);
     
     // add that days text content
     dailyTemp.textContent = `${daily[i].temp.day}° F`;
@@ -172,7 +160,6 @@ var saveCity = function(cityName) {
 
 var load = function () {
   if(!saveArray) {
-    console.log('hit first if statment');
     return false;
   }
   else {}
