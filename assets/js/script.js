@@ -109,7 +109,7 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
   // check that it cut off what you wanted
   for(var i=1;i<daily.length;i++) {
     
-    var forecastDate = moment.unix(daily[i].dt).format("ddd DD/MM");
+    var forecastDate = moment.unix(daily[i].dt).format("ddd MM/DD");
     // create elements for card
     var fiveDayCard = document.createElement('card');
     fiveDayCard.classList.add('card');
