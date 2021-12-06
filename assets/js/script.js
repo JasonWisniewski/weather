@@ -1,5 +1,6 @@
 var citySearchBtn = document.querySelector(".search-btn");
 var forecastEl= document.getElementById("forecast");
+var currentWeatherContainer = document.querySelector("#hide");
 
 
 // get weather API
@@ -52,16 +53,12 @@ citySearchBtn.addEventListener('click',function(event){
   console.log('bntn click');
   console.log('city', cityName.value.trim());
 
-  // unhide the current weather box when user clicks search
-  var currentWeatherContainer = document.querySelector("#hide");
-  currentWeatherContainer.classList.remove('hidden');
-
   getLatLon(cityName.value.trim());
   saveCity(cityName.value.trim());
 
   // clear 5 day forecaset div
   fiveDayEl = ""; 
-  
+  uvindex ="";
 }) 
 
 var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
@@ -69,6 +66,7 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     humidity,'windspeed', windspeed,'uv index', 
     uvindex,'daily', daily );
 
+  currentWeatherContainer.classList.remove('hidden');
   var date = moment().format("ddd, MMM, Do");
   console.log(date);
   currentCityDate= `${city} ${date}`;
@@ -83,13 +81,14 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
   // today uvi
   var todayUvi = document.getElementById('today-uvi');
   todayUvi.textContent = `uv index ${uvindex}`;
+  // clear previous searches class
+  $(todayUvi).removeClass();
   // Color code UV index depending on serverity
-
   if (uvindex < 3){todayUvi.classList.add("bg-success");}
-  else if (3 < uvindex < 6){todayUvi.classList.add("bg-warning");}
-  else if (7 < uvindex < 8){todayUvi.classList.add("bg-secondary");}
-  else if (9 < uvindex < 10){todayUvi.classList.add("bg-danger");}
-  else {todayUvi.classList.add("bg-info");}
+  else if (3 < uvindex && uvindex < 6){todayUvi.classList.add("bg-warning");}
+  else if (6 < uvindex && uvindex < 8){todayUvi.classList.add("bg-secondary");}
+  else if (uvindex > 9){todayUvi.classList.add("bg-danger");}
+  // else {todayUvi.classList.add("bg-info");}
 
   // today windspeed
   var todayWind = document.getElementById('today-windspeed');
@@ -101,6 +100,7 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
 
   // display icon
   var todayIcon= daily[0].weather[0].icon;
+  console.log(todayIcon);
   var iconUrl = `http://openweathermap.org/img/w/${todayIcon}.png`;
   $('#wicon').attr('src', iconUrl);
   forecastEl.innerHTML= "";
@@ -160,26 +160,23 @@ var currentWeather = function(city, temp, humidity, windspeed, uvindex, daily){
     listGroup.appendChild(dailyHum);
   };
 }
-
 var saveArray = [];
-// 
 var saveCity = function(cityName) {
   saveArray.push(cityName);
   localStorage.setItem('city',JSON.stringify(saveArray)); 
-  saveArray.splice(10);
 }
 
 var load = function () {
   if(!saveArray) {
     return false;
   }
-  var loadCity = localStorage.getItem('city');
+  else {}
+  var loadCity = localStorage.getItem('city')
   saveArray = JSON.parse(loadCity);
-  
-  for (i=0;i<saveArray.length; i++){
+  console.log(saveArray);
+  for (i=0;i< saveArray.length; i++){
     buttonCreate(saveArray[i]);
   }
-  
 }
 
 var buttonCreate =function (city){
@@ -206,7 +203,8 @@ var buttonCreate =function (city){
 
 var historySearch = function(event){
   event.trigger;
-  getLatLon(event.target.textContent);
+  var cityButtonName = event.target.textContent
+  getLatLon(cityButtonName);
 };
 
 load();
